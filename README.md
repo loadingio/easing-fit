@@ -58,7 +58,30 @@ instead of simply sampling it with fixed interval of t, easing-fit breaks it int
 
 # Usage
 
-TBD
+First, import easing-fit and use it to create a keyframes object for our customized easing function:
+
+```
+    easingFit = require("easing-fit");
+    customFunc = function(t) {
+      return Math.sin(t * Math.PI * 2);
+    };
+    keyframes = easingFit.fit(customFunc, {});
+```
+
+The keyframes object contains all information needed. Then, convert it to CSS keyframe string with this help function:
+
+```
+    easingFit.toKeyframes(keyframes, {
+      format: "css",
+      propFunc: function(keyframe) { return ["transform: translate(" + keyframe.value + ")"] },
+      name: "sine"
+    }).then(function(result) {
+      /* result is the result CSS content */
+      ...
+    });
+```
+
+Be sure to add your own propFunc for converting value into CSS property. You can also check sample.ls for more detail.
 
 
 ## LICENSE
