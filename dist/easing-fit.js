@@ -23,7 +23,7 @@ fit = function(func, options){
     end: 1
   }, options);
   ref$ = [options.start, 0, 1, 0, []], ox = ref$[0], oy = ref$[1], dy = ref$[2], count = ref$[3], segments = ref$[4];
-  for (i$ = options.start, to$ = options.end; i$ <= to$; i$ += 0.0001) {
+  for (i$ = options.start, to$ = options.end; i$ <= to$; i$ += 0.001) {
     x = i$;
     y = func(x);
     if (count > 2 && Math.sign(y - oy) * Math.sign(dy) < 0) {
@@ -156,7 +156,9 @@ fromSvg = function(pathd, options){
   var step;
   options == null && (options = {});
   step = stepFromSvg(pathd);
-  return fit(step, options);
+  return fit(function(it){
+    return step(it);
+  }, options);
 };
 stepFromSvg = function(pathd){
   var p, len, step;
@@ -166,6 +168,16 @@ stepFromSvg = function(pathd){
     return searchSvgPath(p, t, len, 0.001);
   };
 };
+/*
+step = step-from-svg sample-svg
+for i from 0 til 1 by 0.1 => console.log step(i) + 1.0
+ret1 = from-svg sample-svg, {}
+ret2 = to-keyframes ret1, do
+  name: \heartbeat
+  propFunc: -> ["transform: scale(#{it.value + 0.9}})"]
+  format: \css
+console.log ret1, ret2
+*/
 module.exports = {
   round: round,
   sampleFunc: sampleFunc,

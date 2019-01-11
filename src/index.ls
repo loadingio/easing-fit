@@ -20,7 +20,7 @@ fit = (func, options = {}) ->
   [ox, oy, dy, count, segments] = [options.start, 0, 1, 0, []]
 
   # segment function according to its direction
-  for x from options.start to options.end by 0.0001 =>
+  for x from options.start to options.end by 0.001 =>
     y = func(x)
     if count > 2 and Math.sign(y - oy) * Math.sign(dy) < 0 =>
       segments.push [ox, x]
@@ -128,6 +128,16 @@ step-from-svg = (pathd) ->
   len = p.getTotalLength!
   return step = (t) -> search-svg-path p, t, len, 0.001
 
+/*
+step = step-from-svg sample-svg
+for i from 0 til 1 by 0.1 => console.log step(i) + 1.0
+ret1 = from-svg sample-svg, {}
+ret2 = to-keyframes ret1, do
+  name: \heartbeat
+  propFunc: -> ["transform: scale(#{it.value + 0.9}})"]
+  format: \css
+console.log ret1, ret2
+*/
 
 module.exports = {
   round,
