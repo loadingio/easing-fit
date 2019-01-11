@@ -83,6 +83,7 @@ fit = function(func, options){
   }
 };
 toKeyframes = function(keyframes, options){
+  var str, i$, len$, keyframe;
   options == null && (options = {});
   options = import$({
     propFunc: function(it){
@@ -91,40 +92,37 @@ toKeyframes = function(keyframes, options){
     name: null,
     format: 'stylus'
   }, options || {});
-  return new Promise(function(res, rej){
-    var str, i$, ref$, len$, keyframe;
-    str = options.name
-      ? ["@keyframes " + options.name]
-      : [];
-    if (options.format === 'css') {
-      str = str.concat("{");
-      for (i$ = 0, len$ = (ref$ = keyframes).length; i$ < len$; ++i$) {
-        keyframe = ref$[i$];
-        str = str.concat(["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "     animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8, "  }"].filter(fn$).concat(options.propFunc(keyframe).map(fn1$)));
-      }
-      str = str.concat("}");
-      str = str.join('\n');
-    } else {
-      for (i$ = 0, len$ = (ref$ = keyframes).length; i$ < len$; ++i$) {
-        keyframe = ref$[i$];
-        str = str.concat(["  " + keyframe.percent + "%", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8].filter(fn2$).concat(options.propFunc(keyframe).map(fn3$)));
-      }
-      str = str.join('\n');
+  str = options.name
+    ? ["@keyframes " + options.name]
+    : [];
+  if (options.format === 'css') {
+    str = str.concat("{");
+    for (i$ = 0, len$ = keyframes.length; i$ < len$; ++i$) {
+      keyframe = keyframes[i$];
+      str = str.concat(["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "     animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8, "  }"].filter(fn$).concat(options.propFunc(keyframe).map(fn1$)));
     }
-    return res(str);
-    function fn$(it){
-      return it;
+    str = str.concat("}");
+    str = str.join('\n');
+  } else {
+    for (i$ = 0, len$ = keyframes.length; i$ < len$; ++i$) {
+      keyframe = keyframes[i$];
+      str = str.concat(["  " + keyframe.percent + "%", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8].filter(fn2$).concat(options.propFunc(keyframe).map(fn3$)));
     }
-    function fn1$(it){
-      return "    " + it;
-    }
-    function fn2$(it){
-      return it;
-    }
-    function fn3$(it){
-      return "    " + it;
-    }
-  });
+    str = str.join('\n');
+  }
+  return str;
+  function fn$(it){
+    return it;
+  }
+  function fn1$(it){
+    return "    " + it;
+  }
+  function fn2$(it){
+    return it;
+  }
+  function fn3$(it){
+    return "    " + it;
+  }
 };
 module.exports = {
   fit: fit,

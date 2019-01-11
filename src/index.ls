@@ -83,25 +83,24 @@ to-keyframes = (keyframes, options = {}) ->
     name: null
     format: \stylus
   } <<< (options or {})
-  new Promise (res, rej) ->
-    str = if options.name => ["@keyframes #{options.name}"] else []
-    if options.format == \css =>
-      str ++= "{"
-      for keyframe in keyframes =>
-        str ++= ([
-        "  #{keyframe.percent}% {"
-        "     animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-        "  }"
-        ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
-      str ++= "}"
-      str = str.join('\n')
-    else
-      for keyframe in keyframes =>
-        str ++= ([
-        "  #{keyframe.percent}%"
-        "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-        ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
-      str = str.join('\n')
-    return res str
+  str = if options.name => ["@keyframes #{options.name}"] else []
+  if options.format == \css =>
+    str ++= "{"
+    for keyframe in keyframes =>
+      str ++= ([
+      "  #{keyframe.percent}% {"
+      "     animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
+      "  }"
+      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
+    str ++= "}"
+    str = str.join('\n')
+  else
+    for keyframe in keyframes =>
+      str ++= ([
+      "  #{keyframe.percent}%"
+      "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
+      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
+    str = str.join('\n')
+  return str
 
 module.exports = {fit, to-keyframes, sample-func, round}

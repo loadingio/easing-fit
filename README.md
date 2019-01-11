@@ -71,14 +71,12 @@ First, import easing-fit and use it to create a keyframes object for our customi
 The keyframes object contains all information needed. Then, convert it to CSS keyframe string with this help function:
 
 ```
-    easingFit.toKeyframes(keyframes, {
+    var result = easingFit.toKeyframes(keyframes, {
       format: "css",
       propFunc: function(keyframe) { return ["transform: translate(" + keyframe.value + ")"] },
       name: "sine"
-    }).then(function(result) {
-      /* result is the result CSS content */
-      ...
     });
+    /* result is the result CSS content */
 ```
 
 Be sure to add your own propFunc for converting value into CSS property. You can also check sample.ls for more detail.
