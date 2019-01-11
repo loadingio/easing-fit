@@ -89,19 +89,21 @@ to-keyframes = (keyframes, options = {}) ->
   str = if options.name => ["@keyframes #{options.name}"] else []
   if options.format == \css =>
     str ++= "{"
-    for keyframe in keyframes =>
+    for i from 0 til keyframes.length =>
+      keyframe = keyframes[i]
       str ++= ([
       "  #{keyframe.percent}% {"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it;"))) ++ ["  }"]
+      ].filter(->it) ++ (options.prop-func(keyframe,i).map(-> "    #it;"))) ++ ["  }"]
     str ++= "}"
     str = str.join('\n')
   else
-    for keyframe in keyframes =>
+    for i from 0 til keyframes.length =>
+      keyframe = keyframes[i]
       str ++= ([
       "  #{keyframe.percent}%"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
+      ].filter(->it) ++ (options.prop-func(keyframe,i).map(-> "    #it")))
     str = str.join('\n')
   return str
 
