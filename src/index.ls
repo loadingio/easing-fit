@@ -126,7 +126,7 @@ from-svg = (pathd, options = {}) ->
 step-from-svg = (pathd) ->
   p = svg-path-properties.svg-path-properties pathd
   len = p.getTotalLength!
-  return step = (t) -> search p, t, len, 0.001
+  return step = (t) -> search-svg-path p, t, len, 0.001
 
 
 module.exports = {

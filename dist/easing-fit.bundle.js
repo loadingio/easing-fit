@@ -164,7 +164,7 @@ stepFromSvg = function(pathd){
   p = svgPathProperties.svgPathProperties(pathd);
   len = p.getTotalLength();
   return step = function(t){
-    return search(p, t, len, 0.001);
+    return searchSvgPath(p, t, len, 0.001);
   };
 };
 module.exports = {
