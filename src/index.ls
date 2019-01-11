@@ -89,8 +89,8 @@ to-keyframes = (keyframes, options = {}) ->
     for keyframe in keyframes =>
       str ++= ([
       "  #{keyframe.percent}% {"
-      "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it"))) ++ ["  }"]
+      "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
+      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it;"))) ++ ["  }"]
     str ++= "}"
     str = str.join('\n')
   else

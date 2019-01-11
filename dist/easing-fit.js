@@ -99,7 +99,7 @@ toKeyframes = function(keyframes, options){
     str = str.concat("{");
     for (i$ = 0, len$ = keyframes.length; i$ < len$; ++i$) {
       keyframe = keyframes[i$];
-      str = str.concat(["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8].filter(fn$).concat(options.propFunc(keyframe).map(fn1$)), ["  }"]);
+      str = str.concat(["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ");" : void 8].filter(fn$).concat(options.propFunc(keyframe).map(fn1$)), ["  }"]);
     }
     str = str.concat("}");
     str = str.join('\n');
@@ -115,7 +115,7 @@ toKeyframes = function(keyframes, options){
     return it;
   }
   function fn1$(it){
-    return "    " + it;
+    return "    " + it + ";";
   }
   function fn2$(it){
     return it;
