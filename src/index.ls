@@ -35,9 +35,12 @@ fit = (func, options = {}) ->
   for seg-idx from 0 til segments.length =>
     seg = segments[seg-idx]
     cur = []
-    for x from seg.0 to seg.1 by (seg.1 - seg.0) / options.sample-count =>
+    for x from seg.0 til seg.1 by (seg.1 - seg.0) / options.sample-count =>
       y = Math.round(func(x) * 1000) / 1000
       cur.push [Math.round(1000 * x) * 0.001 ,Math.round(1000 * y) * 0.001]
+    y = Math.round(func(seg.1) * 1000) / 1000
+    cur.push [Math.round(1000 * seg.1) * 0.001 ,Math.round(1000 * y) * 0.001]
+
     points.push cur
 
   # for each segment, calculate spline

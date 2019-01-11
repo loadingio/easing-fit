@@ -39,11 +39,13 @@ fit = function(func, options){
     segIdx = i$;
     seg = segments[segIdx];
     cur = [];
-    for (j$ = seg[0], to1$ = seg[1], step$ = (seg[1] - seg[0]) / options.sampleCount; step$ < 0 ? j$ >= to1$ : j$ <= to1$; j$ += step$) {
+    for (j$ = seg[0], to1$ = seg[1], step$ = (seg[1] - seg[0]) / options.sampleCount; step$ < 0 ? j$ > to1$ : j$ < to1$; j$ += step$) {
       x = j$;
       y = Math.round(func(x) * 1000) / 1000;
       cur.push([Math.round(1000 * x) * 0.001, Math.round(1000 * y) * 0.001]);
     }
+    y = Math.round(func(seg[1]) * 1000) / 1000;
+    cur.push([Math.round(1000 * seg[1]) * 0.001, Math.round(1000 * y) * 0.001]);
     points.push(cur);
   }
   py = NaN;
