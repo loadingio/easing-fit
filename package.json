@@ -3,6 +3,7 @@
   "name": "easing-fit",
   "description": "Fit any easing function with keyframes and cubic-bezier timinf function",
   "version": "0.0.1",
+  "main": "dist/easing-fit.js",
   "homepage": "https://github.com/loadingio/easing-fit",
   "license": "MIT",
   "repository": {
@@ -13,9 +14,12 @@
     "node": ">=0.12.6",
     "npm": ">=1.2.2"
   },
-  "dependencies": {
+  "devDependencies": {
     "LiveScript": ">=1.2.0",
-    "fit-curve": "=0.1.6",
-    "stylus": "=0.54.5"
+    "browserify": "=16.2.3",
+    "uglify-js": "=3.4.9"
+  },
+  "dependencies": {
+    "fit-curve": "=0.1.6"
   }
 }

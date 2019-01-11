@@ -1,4 +1,4 @@
-require! <[fit-curve stylus]>
+require! <[fit-curve]>
 
 round = (n, d = 5) ->
   p = Math.pow(10, d)
@@ -85,14 +85,23 @@ to-keyframes = (keyframes, options = {}) ->
   } <<< (options or {})
   new Promise (res, rej) ->
     str = if options.name => ["@keyframes #{options.name}"] else []
-    for keyframe in keyframes =>
-      str ++= ([
-      "  #{keyframe.percent}%"
-      "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
-    str = str.join('\n')
     if options.format == \css =>
-      stylus.render str, (e, css) -> return if e => rej e else res css
-    else return res str
+      str ++= "{"
+      for keyframe in keyframes =>
+        str ++= ([
+        "  #{keyframe.percent}% {"
+        "     animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
+        "  }"
+        ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
+      str ++= "}"
+      str = str.join('\n')
+    else
+      for keyframe in keyframes =>
+        str ++= ([
+        "  #{keyframe.percent}%"
+        "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
+        ].filter(->it) ++ (options.prop-func(keyframe).map(-> "    #it")))
+      str = str.join('\n')
+    return res str
 
 module.exports = {fit, to-keyframes, sample-func, round}

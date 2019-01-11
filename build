@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+mkdir -p dist
+echo "build src/index.ls -> dist/easing-fit.js ..."
+./node_modules/.bin/lsc -cbp src/index.ls > dist/easing-fit.js
+echo "bundling easing-fit.js ..."
+./node_modules/.bin/browserify dist/easing-fit.js > dist/easing-fit.bundle.js
+#./node_modules/.bin/browserify dist/easing-fit.js | \
+#  ./node_modules/.bin/babel --no-babelrc --presets=env > dist/easing-fit.bundle.js
+echo "minifying easing-fit.js ..."
+./node_modules/.bin/uglifyjs dist/easing-fit.js > dist/easing-fit.min.js
+echo "minifying easing-fit.bundle.js ..."
+./node_modules/.bin/uglifyjs dist/easing-fit.bundle.js > dist/easing-fit.bundle.min.js
+echo "done."
