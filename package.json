@@ -20,6 +20,7 @@
     "uglify-js": "=3.4.9"
   },
   "dependencies": {
-    "fit-curve": "=0.1.6"
+    "fit-curve": "=0.1.6",
+    "svg-path-properties": "^0.4.7"
   }
 }
