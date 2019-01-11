@@ -16,11 +16,11 @@ sample-func = (t) ->
 #     sample-count: how many points to sample for each segment
 #     error-threshold: max error between a spline and target function
 fit = (func, options = {}) ->
-  [ox, oy, dy, count, segments] = [0, 0, 1, 0, []]
-  options = {precision: 0.0001, sample-count: 5, error-threshold: 0.1} <<< options
+  options = {precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1} <<< options
+  [ox, oy, dy, count, segments] = [options.start, 0, 1, 0, []]
 
   # segment function according to its direction
-  for x from 0 to 1 by 0.0001 =>
+  for x from options.start to options.end by 0.0001 =>
     y = func(x)
     if count > 2 and Math.sign(y - oy) * Math.sign(dy) < 0 =>
       segments.push [ox, x]
@@ -28,7 +28,7 @@ fit = (func, options = {}) ->
     dy = y - oy
     oy = y
     count = count + 1
-  segments.push [ox, 1]
+  segments.push [ox, options.end]
 
   # now, sample each segment 
   points = [] # sampled points for each segment.
@@ -65,7 +65,7 @@ fit = (func, options = {}) ->
         cubic-bezier: [ncurve.1.0, ncurve.1.1, ncurve.2.0, ncurve.2.1].map -> round(it)
 
   keyframes.push do
-    percent: 100
+    percent: options.end * 100
     value: y2
   return keyframes
 

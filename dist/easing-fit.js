@@ -12,15 +12,17 @@ sampleFunc = function(t){
   return Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / (Math.pow(3 * t + 2, 5 * t) + 1));
 };
 fit = function(func, options){
-  var ref$, ox, oy, dy, count, segments, i$, x, y, points, to$, segIdx, seg, cur, j$, step$, to1$, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
+  var ref$, ox, oy, dy, count, segments, i$, to$, x, y, points, segIdx, seg, cur, j$, step$, to1$, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
   options == null && (options = {});
-  ref$ = [0, 0, 1, 0, []], ox = ref$[0], oy = ref$[1], dy = ref$[2], count = ref$[3], segments = ref$[4];
   options = import$({
     precision: 0.0001,
     sampleCount: 5,
-    errorThreshold: 0.1
+    errorThreshold: 0.1,
+    start: 0,
+    end: 1
   }, options);
-  for (i$ = 0; i$ <= 1; i$ += 0.0001) {
+  ref$ = [options.start, 0, 1, 0, []], ox = ref$[0], oy = ref$[1], dy = ref$[2], count = ref$[3], segments = ref$[4];
+  for (i$ = options.start, to$ = options.end; i$ <= to$; i$ += 0.0001) {
     x = i$;
     y = func(x);
     if (count > 2 && Math.sign(y - oy) * Math.sign(dy) < 0) {
@@ -31,7 +33,7 @@ fit = function(func, options){
     oy = y;
     count = count + 1;
   }
-  segments.push([ox, 1]);
+  segments.push([ox, options.end]);
   points = [];
   for (i$ = 0, to$ = segments.length; i$ < to$; ++i$) {
     segIdx = i$;
@@ -72,7 +74,7 @@ fit = function(func, options){
     }
   }
   keyframes.push({
-    percent: 100,
+    percent: options.end * 100,
     value: y2
   });
   return keyframes;
