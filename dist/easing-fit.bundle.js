@@ -88,7 +88,7 @@ fit = function(func, options){
   }
 };
 toKeyframes = function(keyframes, options){
-  var str, i$, to$, i, keyframe;
+  var str, i$, to$, i, keyframe, props, k, v;
   options == null && (options = {});
   options = import$({
     propFunc: function(it){
@@ -105,7 +105,8 @@ toKeyframes = function(keyframes, options){
     for (i$ = 0, to$ = keyframes.length; i$ < to$; ++i$) {
       i = i$;
       keyframe = keyframes[i];
-      str = str.concat(["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ");" : void 8].filter(fn$).concat(options.propFunc(keyframe, i).map(fn1$)), ["  }"]);
+      props = (fn$()).map(fn1$);
+      str = str.concat((["  " + keyframe.percent + "% {", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ");" : void 8].concat(props, ["  }"])).filter(fn2$));
     }
     str = str.concat("}");
     str = str.join('\n');
@@ -113,22 +114,39 @@ toKeyframes = function(keyframes, options){
     for (i$ = 0, to$ = keyframes.length; i$ < to$; ++i$) {
       i = i$;
       keyframe = keyframes[i];
-      str = str.concat(["  " + keyframe.percent + "%", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8].filter(fn2$).concat(options.propFunc(keyframe, i).map(fn3$)));
+      props = (fn3$()).map(fn4$);
+      str = str.concat((["  " + keyframe.percent + "%", keyframe.cubicBezier ? "    animation-timing-function: cubic-bezier(" + keyframe.cubicBezier.join(',') + ")" : void 8].concat(props)).filter(fn5$));
     }
     str = str.join('\n');
   }
   return str;
-  function fn$(it){
-    return it;
+  function fn$(){
+    var ref$, results$ = [];
+    for (k in ref$ = options.propFunc(keyframe, i)) {
+      v = ref$[k];
+      results$.push([k, v]);
+    }
+    return results$;
   }
   function fn1$(it){
-    return "    " + it + ";";
+    return "    " + it[0] + ": " + it[1] + ";";
   }
   function fn2$(it){
     return it;
   }
-  function fn3$(it){
-    return "    " + it;
+  function fn3$(){
+    var ref$, results$ = [];
+    for (k in ref$ = options.propFunc(keyframe, i)) {
+      v = ref$[k];
+      results$.push([k, v]);
+    }
+    return results$;
+  }
+  function fn4$(it){
+    return "    " + it[0] + ": " + it[1];
+  }
+  function fn5$(it){
+    return it;
   }
 };
 sampleSvg = "M0,50c0,0,2,0.5,6.7,0c5.6-0.6,3.5-18.1,7.1-18.1s4.2,25.6,8.9,25.6s6.8-10.3,8.4-14c1.9-4.4,7.9-5.4,10.9,0.1C46.7,52.3,100,50,100,50";
@@ -154,18 +172,37 @@ searchSvgPath = function(p, x, len, err, r, lv){
     return (0.5 - ptr.y) * 2;
   }
 };
-fromSvg = function(pathd, options){
+fromSvg = function(d, opt){
   var step;
-  options == null && (options = {});
-  step = stepFromSvg(pathd);
-  return fit(step, options);
+  opt == null && (opt = {});
+  step = stepFromSvg(d);
+  return fit(step, opt);
 };
-stepFromSvg = function(pathd){
-  var p, len, step;
+stepFromSvg = function(pathd, opt){
+  var p, len, step, pts, res$, i$, step$, i;
+  opt == null && (opt = {});
   p = svgPathProperties.svgPathProperties(pathd);
   len = p.getTotalLength();
-  return step = function(t){
+  step = function(t){
     return searchSvgPath(p, t, len, 0.001);
+  };
+  if (!opt.presampling) {
+    return step;
+  }
+  res$ = [];
+  for (i$ = 0, step$ = 1 / options.sampleCount; step$ < 0 ? i$ >= 1 : i$ <= 1; i$ += step$) {
+    i = i$;
+    res$.push(step(i));
+  }
+  pts = res$;
+  return function(t){
+    var idx;
+    t = t * pts.length;
+    idx = Math.floor(t);
+    if (idx === pts.length - 1) {
+      return pts[idx];
+    }
+    return (pts[idx + 1] - pts[idx]) * t(-idx);
   };
 };
 module.exports = {
