@@ -33,9 +33,30 @@ CubicFunc.glsl = """
 float cubic(float x, vec4 p) {
   return p.x * x * x * x + p.y * x * x + p.z * x + p.w;
 }
-float cubicRoot(float y, vec4 p) {
-  float a,b,c,d;
-  /* to be implement */
+/* 3 roots, 1 for root count */
+vec4 cubicRoot(float y, vec4 p) {
+  float a, b, c, d, A, B, C, D, y1, y2, k, theta, x1, x2, x3;
+  d = d - y;
+  A = b * b - 3. * a * c;
+  B = b * c - 9. * a * d;
+  C = c * c - 3. * b * d;
+  D = B * B - 4. * A * C;
+  if(A==B && B==0.) return vec4(-b / (3. * a), -c / b, -3. * d / c, 3.);
+  if(D > 0) {
+    y1 = A * b + 3. * a * (-B + sqrt(D)) * 0.5;
+    y2 = A * b + 3. * a * (-B - sqrt(D)) * 0.5;
+    return vec4(vec3(-b - (cbrt(y1) + cbrt(y2)) / ( 3. * a)), 1.);
+  } else if(D == 0) { 
+    k = B/A;
+    return vec4((-b/a) + k, -k/2., -k/2., 2.);
+  } else if(D < 0) {
+    k = (2. * A * b - 3 * a * B) / (2. * A * sqrt(A));
+    theta = acos(k) / 3.;
+    x1 = (-b - 2. * sqrt(A) * cos(theta)) / (3. * a);
+    x2 = (-b + sqrt(A) * (cos(theta) + sqrt(3.) * sin(theta))) / (3. * a);
+    x3 = (-b + sqrt(A) * (cos(theta) - sqrt(3.) * sin(theta))) / (3. * a);
+    return vec4(x1, x2, x3, 3.);
+  }
 }
 """
 
