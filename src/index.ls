@@ -93,19 +93,21 @@ to-keyframes = (keyframes, options = {}) ->
     str ++= "{"
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
+      props = [[k,v] for k,v of options.prop-func(keyframe, i)].map -> "    #{it.0}: #{it.1};"
       str ++= ([
       "  #{keyframe.percent}% {"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe,i).map(-> "    #it;"))) ++ ["  }"]
+      ] ++ props ++ ["  }"]).filter(->it)
     str ++= "}"
     str = str.join('\n')
   else
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
+      props = [[k,v] for k,v of options.prop-func(keyframe, i)].map -> "    #{it.0}: #{it.1}"
       str ++= ([
       "  #{keyframe.percent}%"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
-      ].filter(->it) ++ (options.prop-func(keyframe,i).map(-> "    #it")))
+      ] ++ props).filter(->it)
     str = str.join('\n')
   return str
 
