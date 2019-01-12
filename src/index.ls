@@ -16,11 +16,13 @@ sample-func = (t) ->
 #     sample-count: how many points to sample for each segment
 #     error-threshold: max error between a spline and target function
 fit = (func, options = {}) ->
-  options = {precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1} <<< options
+  options = {
+    seg-sample-count: 100, precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1
+  } <<< options
   [ox, oy, dy, count, segments] = [options.start, 0, 1, 0, []]
 
   # segment function according to its direction
-  for x from options.start to options.end by 0.001 =>
+  for x from options.start to options.end by 1/options.seg-sample-count =>
     y = func(x)
     if count > 2 and Math.sign(y - oy) * Math.sign(dy) < 0 =>
       segments.push [ox, x]
@@ -119,25 +121,23 @@ search-svg-path = (p, x, len, err = 0.01, r=[0, 1], lv = 20) ->
   else if ptr.x < x => search-svg-path p, x, len, err, [(r.0 + r.1) * 0.5, r.1], lv - 1
   else return (0.5 - ptr.y) * 2
 
-from-svg = (pathd, options = {}) ->
-  step = step-from-svg pathd
-  fit step, options
+# d: <path d>
+from-svg = (d, opt = {}) ->
+  step = step-from-svg d
+  fit step, opt
 
-step-from-svg = (pathd) ->
+# if opt.presampling = true, enable presampling with opt.sample-count
+step-from-svg = (pathd, opt  = {}) ->
   p = svg-path-properties.svg-path-properties pathd
   len = p.getTotalLength!
-  return step = (t) -> search-svg-path p, t, len, 0.001
-
-/*
-step = step-from-svg sample-svg
-for i from 0 til 1 by 0.1 => console.log step(i) + 1.0
-ret1 = from-svg sample-svg, {}
-ret2 = to-keyframes ret1, do
-  name: \heartbeat
-  propFunc: -> ["transform: scale(#{it.value + 0.9}})"]
-  format: \css
-console.log ret1, ret2
-*/
+  step = (t) -> search-svg-path p, t, len, 0.001
+  if !opt.presampling => return step
+  pts = for i from 0 to 1 by 1/options.sample-count => step i
+  return (t) ->
+    t = t * pts.length
+    idx = Math.floor(t)
+    if idx == pts.length - 1 => return pts[idx]
+    return (pts[idx + 1] - pts[idx]) * (t -idx)
 
 module.exports = {
   round,

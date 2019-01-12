@@ -13,9 +13,10 @@ sampleFunc = function(t){
   return Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / (Math.pow(3 * t + 2, 5 * t) + 1));
 };
 fit = function(func, options){
-  var ref$, ox, oy, dy, count, segments, i$, to$, x, y, points, segIdx, seg, cur, j$, step$, to1$, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
+  var ref$, ox, oy, dy, count, segments, i$, step$, to$, x, y, points, segIdx, seg, cur, j$, to1$, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
   options == null && (options = {});
   options = import$({
+    segSampleCount: 100,
     precision: 0.0001,
     sampleCount: 5,
     errorThreshold: 0.1,
@@ -23,7 +24,7 @@ fit = function(func, options){
     end: 1
   }, options);
   ref$ = [options.start, 0, 1, 0, []], ox = ref$[0], oy = ref$[1], dy = ref$[2], count = ref$[3], segments = ref$[4];
-  for (i$ = options.start, to$ = options.end; i$ <= to$; i$ += 0.001) {
+  for (i$ = options.start, to$ = options.end, step$ = 1 / options.segSampleCount; step$ < 0 ? i$ >= to$ : i$ <= to$; i$ += step$) {
     x = i$;
     y = func(x);
     if (count > 2 && Math.sign(y - oy) * Math.sign(dy) < 0) {
@@ -156,9 +157,7 @@ fromSvg = function(pathd, options){
   var step;
   options == null && (options = {});
   step = stepFromSvg(pathd);
-  return fit(function(it){
-    return step(it);
-  }, options);
+  return fit(step, options);
 };
 stepFromSvg = function(pathd){
   var p, len, step;
@@ -168,16 +167,6 @@ stepFromSvg = function(pathd){
     return searchSvgPath(p, t, len, 0.001);
   };
 };
-/*
-step = step-from-svg sample-svg
-for i from 0 til 1 by 0.1 => console.log step(i) + 1.0
-ret1 = from-svg sample-svg, {}
-ret2 = to-keyframes ret1, do
-  name: \heartbeat
-  propFunc: -> ["transform: scale(#{it.value + 0.9}})"]
-  format: \css
-console.log ret1, ret2
-*/
 module.exports = {
   round: round,
   sampleFunc: sampleFunc,
