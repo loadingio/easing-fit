@@ -2,8 +2,8 @@
 #   ref: https://zh.wikipedia.org/wiki/%E4%B8%89%E6%AC%A1%E6%96%B9%E7%A8%8B
 # calculate f(x), or finding roots for f(x) = y
 
-CubicFunc = (a, b, c, d) -> @ <<< {a, b, c, d}; return @
-CubicFunc.prototype = Object.create(Object.prototype) <<< do
+Func = (a, b, c, d) -> @ <<< {a, b, c, d}; return @
+Func.prototype = Object.create(Object.prototype) <<< do
   calc: (x, a = @a, b = @b, c = @c, d = @d) ->
     return a * (x ** 3) + b * (x ** 2) + c * (x) + d
   root: (y = 0, a = @a, b = @b, c = @c, d = @d) ->
@@ -29,7 +29,7 @@ CubicFunc.prototype = Object.create(Object.prototype) <<< do
       x3 = (-b + Math.sqrt(A) * ( Math.cos(theta / 3) - Math.sqrt(3) * Math.sin(theta / 3))) / (3 * a)
       return [x1, x2, x3]
 
-CubicFunc.glsl = """
+Func.glsl = """
 float cubic(float x, vec4 p) {
   return p.x * x * x * x + p.y * x * x + p.z * x + p.w;
 }
@@ -60,4 +60,20 @@ vec4 cubicRoot(float y, vec4 p) {
 }
 """
 
-module.exports = CubicFunc
+Bezier = (p) ->
+  @ <<< {p}
+  @coff = coff = [
+    ( 3 * p.0 - 3 * p.2 + 1 ),
+    (-6 * p.0 + 3 * p.2     ),
+    ( 3 * p.0               ),
+    0
+  ]
+  @eq = new Func coff.0, coff.1, coff.2, coff.3
+  @
+
+Bezier.prototype = Object.create(Object.prototype) <<< do
+  x: (t, p = @p) -> 3 * ((1 - t) ** 2) * t * p.0 + 3 * (1 - t) * t * t * p.2 + t * t * t
+  y: (t, p = @p) -> 3 * ((1 - t) ** 2) * t * p.1 + 3 * (1 - t) * t * t * p.3 + t * t * t
+  t: (x) -> @eq.root(x).0
+
+module.exports = {Func, Bezier}
