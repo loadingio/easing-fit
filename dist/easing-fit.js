@@ -90,7 +90,7 @@ toKeyframes = function(keyframes, opt){
   var str, i$, to$, i, keyframe, props, k, v;
   opt == null && (opt = {});
   opt = import$({
-    propFunc: function(f, c){
+    propFunc: function(f, i, c){
       return {
         content: "\"" + f.value + "\""
       };
@@ -124,7 +124,7 @@ toKeyframes = function(keyframes, opt){
   return str;
   function fn$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.propFunc(keyframe, i, opt.cfg)) {
+    for (k in ref$ = opt.propFunc(keyframe, i, opt.config)) {
       v = ref$[k];
       results$.push([k, v]);
     }
@@ -138,7 +138,7 @@ toKeyframes = function(keyframes, opt){
   }
   function fn3$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.propFunc(keyframe, i, opt.cfg)) {
+    for (k in ref$ = opt.propFunc(keyframe, i, opt.config)) {
       v = ref$[k];
       results$.push([k, v]);
     }
