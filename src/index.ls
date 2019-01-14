@@ -81,14 +81,13 @@ fit = (func, opt = {}) ->
 #   prop-func: for customizing css properties to animate.
 #     input:
 #       f - keyframe object, such as {percent: 0, value: 1, cubic-bezier: [...]}
-#       i - index of frame.
 #       c - customized config for used in prop-func. defined by user.
 #     output:  array of string.
 #   format: one of following: "css", "stylus"
 #   config: customized config for used in prop-func. defined by user.
 to-keyframes = (keyframes, opt = {}) ->
   opt = {
-    prop-func: (f, i, c)-> { content: "\"#{f.value}\"" }
+    prop-func: (f, c)-> { content: "\"#{f.value}\"" }
     name: null
     format: \stylus
     config: {}
@@ -98,7 +97,7 @@ to-keyframes = (keyframes, opt = {}) ->
     str ++= "{"
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop-func(keyframe, i, opt.config)].map -> "    #{it.0}: #{it.1};"
+      props = [[k,v] for k,v of opt.prop-func(keyframe, opt.config)].map -> "    #{it.0}: #{it.1};"
       str ++= ([
       "  #{keyframe.percent}% {"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
@@ -108,7 +107,7 @@ to-keyframes = (keyframes, opt = {}) ->
   else
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop-func(keyframe, i, opt.config)].map -> "    #{it.0}: #{it.1}"
+      props = [[k,v] for k,v of opt.prop-func(keyframe, opt.config)].map -> "    #{it.0}: #{it.1}"
       str ++= ([
       "  #{keyframe.percent}%"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
