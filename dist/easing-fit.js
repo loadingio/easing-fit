@@ -90,7 +90,7 @@ toKeyframes = function(keyframes, opt){
   var str, i$, to$, i, keyframe, props, k, v;
   opt == null && (opt = {});
   opt = import$({
-    propFunc: function(f, c){
+    prop: function(f, c){
       return {
         content: "\"" + f.value + "\""
       };
@@ -124,7 +124,7 @@ toKeyframes = function(keyframes, opt){
   return str;
   function fn$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.propFunc(keyframe, opt.config)) {
+    for (k in ref$ = opt.prop(keyframe, opt.config)) {
       v = ref$[k];
       results$.push([k, v]);
     }
@@ -138,7 +138,7 @@ toKeyframes = function(keyframes, opt){
   }
   function fn3$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.propFunc(keyframe, opt.config)) {
+    for (k in ref$ = opt.prop(keyframe, opt.config)) {
       v = ref$[k];
       results$.push([k, v]);
     }
@@ -155,12 +155,17 @@ fitToKeyframes = function(step, opt){
   var ret, ref$;
   opt == null && (opt = {});
   ret = fit(step, opt);
-  ret = toKeyframes(ret, (ref$ = {
-    propFunc: function(){
-      return {};
-    },
-    format: 'css'
-  }, ref$.name = opt.name, ref$.propFunc = opt.propFunc, ref$.format = opt.format, ref$.config = opt.config, ref$));
+  ret = toKeyframes(ret, {
+    name: (ref$ = import$({
+      prop: function(){
+        return {};
+      },
+      format: 'css'
+    }, opt)).name,
+    prop: ref$.prop,
+    format: ref$.format,
+    config: ref$.config
+  });
   return ret;
 };
 sampleSvg = "M0,50c0,0,2,0.5,6.7,0c5.6-0.6,3.5-18.1,7.1-18.1s4.2,25.6,8.9,25.6s6.8-10.3,8.4-14c1.9-4.4,7.9-5.4,10.9,0.1C46.7,52.3,100,50,100,50";

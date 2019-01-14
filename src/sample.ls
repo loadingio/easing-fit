@@ -3,7 +3,7 @@ easing-fit = require "./index.ls"
 func = easing-fit.sample-func
 
 options = do
-  prop-func: (f,c) -> {"transform": "translate(0,#{easing-fit.round(f.value * 100)}px)"}
+  prop: (f,c) -> {"transform": "translate(0,#{easing-fit.round(f.value * 100)}px)"}
   name: "bounce"
   format: "css"
 

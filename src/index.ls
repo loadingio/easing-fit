@@ -78,16 +78,16 @@ fit = (func, opt = {}) ->
 # parameters:
 #   keyframes: output of fit function
 #   name: keyframe name. omit for naked keyframes.
-#   prop-func: for customizing css properties to animate.
+#   prop: for customizing css properties to animate.
 #     input:
 #       f - keyframe object, such as {percent: 0, value: 1, cubic-bezier: [...]}
-#       c - customized config for used in prop-func. defined by user.
+#       c - customized config for used in prop. defined by user.
 #     output:  array of string.
 #   format: one of following: "css", "stylus"
-#   config: customized config for used in prop-func. defined by user.
+#   config: customized config for used in prop. defined by user.
 to-keyframes = (keyframes, opt = {}) ->
-  opt = {
-    prop-func: (f, c)-> { content: "\"#{f.value}\"" }
+  opt = {} <<< {
+    prop: (f, c)-> { content: "\"#{f.value}\"" }
     name: null
     format: \css
     config: {}
@@ -97,7 +97,7 @@ to-keyframes = (keyframes, opt = {}) ->
     str ++= "{"
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop-func(keyframe, opt.config)].map -> "    #{it.0}: #{it.1};"
+      props = [[k,v] for k,v of opt.prop(keyframe, opt.config)].map -> "    #{it.0}: #{it.1};"
       str ++= ([
       "  #{keyframe.percent}% {"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
@@ -107,7 +107,7 @@ to-keyframes = (keyframes, opt = {}) ->
   else
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop-func(keyframe, opt.config)].map -> "    #{it.0}: #{it.1}"
+      props = [[k,v] for k,v of opt.prop(keyframe, opt.config)].map -> "    #{it.0}: #{it.1}"
       str ++= ([
       "  #{keyframe.percent}%"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier
@@ -123,12 +123,12 @@ to-keyframes = (keyframes, opt = {}) ->
 #   error-threshold: max error between a spline and target function
 # /* keyframes options */
 #   name: keyframe name. omit for naked keyframes.
-#   prop-func: for customizing css properties to animate.
+#   prop: for customizing css properties to animate.
 #   format: one of following: "css", "stylus"
-#   config: customized config for used in prop-func. defined by user.
+#   config: customized config for used in prop. defined by user.
 fit-to-keyframes = (step, opt={}) ->
   ret = fit step, opt
-  ret = to-keyframes ret, {prop-func: (->{}), format: \css} <<< opt{name, prop-func, format, config}
+  ret = to-keyframes ret, ({prop: (->{}), format: \css} <<< opt){name, prop, format, config}
   return ret
 
 sample-svg = "M0,50c0,0,2,0.5,6.7,0c5.6-0.6,3.5-18.1,7.1-18.1s4.2,25.6,8.9,25.6s6.8-10.3,8.4-14c1.9-4.4,7.9-5.4,10.9,0.1C46.7,52.3,100,50,100,50"
