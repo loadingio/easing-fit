@@ -3,12 +3,13 @@ easing-fit = require "./index.ls"
 func = easing-fit.sample-func
 
 options = do
-  prop-func: -> {"transform": "translate(0,#{easing-fit.round(it.value * 100)}px)"}
+  prop-func: (f,i,c) -> {"transform": "translate(0,#{easing-fit.round(f.value * 100)}px)"}
   name: "bounce"
   format: "css"
 
 ret = easing-fit.fit func, {}
 css = easing-fit.to-keyframes ret, options
+css = easing-fit.fit-to-keyframes func, options
 
 console.log css
 
