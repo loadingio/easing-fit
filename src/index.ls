@@ -89,7 +89,7 @@ to-keyframes = (keyframes, opt = {}) ->
   opt = {
     prop-func: (f, c)-> { content: "\"#{f.value}\"" }
     name: null
-    format: \stylus
+    format: \css
     config: {}
   } <<< (opt or {})
   str = if opt.name => ["@keyframes #{opt.name}"] else []

@@ -96,7 +96,7 @@ toKeyframes = function(keyframes, opt){
       };
     },
     name: null,
-    format: 'stylus',
+    format: 'css',
     config: {}
   }, opt || {});
   str = opt.name
