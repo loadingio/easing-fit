@@ -73,7 +73,7 @@ The keyframes object contains all information needed. Then, convert it to CSS ke
 ```
     var result = easingFit.toKeyframes(keyframes, {
       format: "css",
-      prop: function(keyframe,config) { return {"transform": "translate(" + keyframe.value + ")"}; },
+      prop: function(keyframe,config, idx) { return {"transform": "translate(" + keyframe.value + ")"}; },
       name: "sine",
       config: {.../* custom defined config */ }
     });

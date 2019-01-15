@@ -97,7 +97,7 @@ to-keyframes = (keyframes, opt = {}) ->
     str ++= "{"
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop(keyframe, opt.config)].map -> "    #{it.0}: #{it.1};"
+      props = [[k,v] for k,v of opt.prop(keyframe, opt.config, i)].map -> "    #{it.0}: #{it.1};"
       str ++= ([
       "  #{keyframe.percent}% {"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')});" if keyframe.cubic-bezier
@@ -107,7 +107,7 @@ to-keyframes = (keyframes, opt = {}) ->
   else
     for i from 0 til keyframes.length =>
       keyframe = keyframes[i]
-      props = [[k,v] for k,v of opt.prop(keyframe, opt.config)].map -> "    #{it.0}: #{it.1}"
+      props = [[k,v] for k,v of opt.prop(keyframe, opt.config, i)].map -> "    #{it.0}: #{it.1}"
       str ++= ([
       "  #{keyframe.percent}%"
       "    animation-timing-function: cubic-bezier(#{keyframe.cubic-bezier.join(',')})" if keyframe.cubic-bezier

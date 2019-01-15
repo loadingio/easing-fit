@@ -124,7 +124,7 @@ toKeyframes = function(keyframes, opt){
   return str;
   function fn$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.prop(keyframe, opt.config)) {
+    for (k in ref$ = opt.prop(keyframe, opt.config, i)) {
       v = ref$[k];
       results$.push([k, v]);
     }
@@ -138,7 +138,7 @@ toKeyframes = function(keyframes, opt){
   }
   function fn3$(){
     var ref$, results$ = [];
-    for (k in ref$ = opt.prop(keyframe, opt.config)) {
+    for (k in ref$ = opt.prop(keyframe, opt.config, i)) {
       v = ref$[k];
       results$.push([k, v]);
     }
