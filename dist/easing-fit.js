@@ -13,7 +13,7 @@ sampleFunc = function(t){
   return Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / (Math.pow(3 * t + 2, 5 * t) + 1));
 };
 fit = function(func, opt){
-  var ref$, ox, oy, dy, count, segments, i$, step$, to$, x, y, points, segIdx, seg, cur, j$, to1$, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
+  var ref$, ox, oy, dy, count, segments, i$, step$, to$, x, y, p, j$, to1$, i, points, segIdx, seg, cur, py, keyframes, len$, ps, curves, len1$, curve, x1, x2, y1, y2, ncurve, k$, j;
   opt == null && (opt = {});
   opt = import$({
     segSampleCount: 100,
@@ -21,7 +21,8 @@ fit = function(func, opt){
     sampleCount: 5,
     errorThreshold: 0.1,
     start: 0,
-    end: 1
+    end: 1,
+    segPtrs: []
   }, opt);
   ref$ = [opt.start, 0, 1, 0, []], ox = ref$[0], oy = ref$[1], dy = ref$[2], count = ref$[3], segments = ref$[4];
   for (i$ = opt.start, to$ = opt.end, step$ = 1 / opt.segSampleCount; step$ < 0 ? i$ >= to$ : i$ <= to$; i$ += step$) {
@@ -30,6 +31,14 @@ fit = function(func, opt){
     if (count > 2 && Math.sign(y - oy) * Math.sign(dy) < 0) {
       segments.push([ox, x]);
       ox = x;
+    }
+    p = opt.segPtrs.filter(fn$).filter(fn1$);
+    if (p.length) {
+      for (j$ = 0, to1$ = p.length; j$ < to1$; ++j$) {
+        i = j$;
+        segments.push([ox, p[i]]);
+        ox = p[i];
+      }
     }
     dy = y - oy;
     oy = y;
@@ -73,7 +82,7 @@ fit = function(func, opt){
       keyframes.push({
         percent: round(x1 * 100),
         value: y1,
-        cubicBezier: [ncurve[1][0], ncurve[1][1], ncurve[2][0], ncurve[2][1]].map(fn$)
+        cubicBezier: [ncurve[1][0], ncurve[1][1], ncurve[2][0], ncurve[2][1]].map(fn2$)
       });
     }
   }
@@ -83,6 +92,12 @@ fit = function(func, opt){
   });
   return keyframes;
   function fn$(it){
+    return it > x;
+  }
+  function fn1$(it){
+    return it <= x + 1 / opt.segSampleCount;
+  }
+  function fn2$(it){
     return round(it);
   }
 };

@@ -56,7 +56,7 @@ instead of simply sampling it with fixed interval of t, easing-fit breaks it int
 ```
 
 
-# Usage
+## Usage
 
 First, import easing-fit and use it to create a keyframes object for our customized easing function:
 
@@ -81,6 +81,17 @@ The keyframes object contains all information needed. Then, convert it to CSS ke
 ```
 
 Be sure to add your own prop function for converting value into CSS property. You can also check sample.ls for more detail.
+
+
+## Configuration
+
+To tweak easing-fit further more, you can pass configuration into easingFit.fit, in the second parameter.
+
+ * segSampleCount: how many points to sample in each segment. default is 1000.
+ * sampleCount: how many points to sample when finding segment. default is 5.
+ * errorThreshold: pass to curve-fit, for error thresholding. default is 0.1
+ * precision: precision for output. default is 0.0001
+ * segPtrs: Array of points for forcing easing-fit to cut segments at. handy for approximating non-smooth function. default is [].
 
 
 ## LICENSE

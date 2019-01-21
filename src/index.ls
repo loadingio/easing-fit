@@ -17,7 +17,8 @@ sample-func = (t) ->
 #     error-threshold: max error between a spline and target function
 fit = (func, opt = {}) ->
   opt = {
-    seg-sample-count: 100, precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1
+    seg-sample-count: 100, precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1,
+    seg-ptrs: []
   } <<< opt
   [ox, oy, dy, count, segments] = [opt.start, 0, 1, 0, []]
 
@@ -27,6 +28,11 @@ fit = (func, opt = {}) ->
     if count > 2 and Math.sign(y - oy) * Math.sign(dy) < 0 =>
       segments.push [ox, x]
       ox = x
+    p = opt.seg-ptrs.filter(->it > x).filter(->it <= x + (1/opt.seg-sample-count))
+    if p.length =>
+      for i from 0 til p.length =>
+        segments.push [ox, p[i]]
+        ox = p[i]
     dy = y - oy
     oy = y
     count = count + 1
