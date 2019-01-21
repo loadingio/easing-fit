@@ -87,8 +87,8 @@ Be sure to add your own prop function for converting value into CSS property. Yo
 
 To tweak easing-fit further more, you can pass configuration into easingFit.fit, in the second parameter.
 
- * segSampleCount: how many points to sample in each segment. default is 1000.
- * sampleCount: how many points to sample when finding segment. default is 5.
+ * SampleCount: how many points to sample in each segment. default is 1000.
+ * segSampleCount: how many points to sample when finding segment. default is 5.
  * errorThreshold: pass to curve-fit, for error thresholding. default is 0.1
  * precision: precision for output. default is 0.0001
  * segPtrs: Array of points for forcing easing-fit to cut segments at. handy for approximating non-smooth function. default is [].
