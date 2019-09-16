@@ -80,6 +80,12 @@ fit = function(func, opt){
         j = k$;
         ncurve.push([Math.round(((curve[j][0] - x1) / (x2 - x1)) / opt.precision) * opt.precision, Math.round(((curve[j][1] - y1) / (y2 - y1)) / opt.precision) * opt.precision]);
       }
+      if (isNaN(ncurve[1][1])) {
+        ncurve[1][1] = ncurve[1][0];
+      }
+      if (isNaN(ncurve[2][1])) {
+        ncurve[2][1] = ncurve[2][0];
+      }
       keyframes.push({
         percent: round(x1 * 100),
         value: y1,

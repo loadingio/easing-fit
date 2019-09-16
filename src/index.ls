@@ -70,6 +70,10 @@ fit = (func, opt = {}) ->
           Math.round(((curve[j].0 - x1) / (x2 - x1)) / opt.precision) * opt.precision,
           Math.round(((curve[j].1 - y1) / (y2 - y1)) / opt.precision) * opt.precision
         ]
+      # if all y in ps are the same (flat line), then ncurve.*.1 will be NaN.
+      # simply make it the same with ncurve.*.0 to make a straight line bezier-curve.
+      if isNaN(ncurve.1.1) => ncurve.1.1 = ncurve.1.0
+      if isNaN(ncurve.2.1) => ncurve.2.1 = ncurve.2.0
       keyframes.push do
         percent: round(x1 * 100)
         value: y1
