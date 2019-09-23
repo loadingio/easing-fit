@@ -4,6 +4,7 @@ round = (n, d = 5) ->
   p = Math.pow(10, d)
   ret = "#{Math.round(n * p ) / p}".split(".")
   +(ret.0 + (if ret.1 => "." + ret.1.substring(0,d) else ""))
+  # or use this:  +(n).toFixed(d)
 
 sample-func = (t) -> 
   Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / ( Math.pow(3 * t + 2, 5 * t) + 1))
