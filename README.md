@@ -1,5 +1,7 @@
 # easing-fit
 
+( refactoring attempts in `dev` branch )
+
 Fit any easing function with keyframes and cubic-bezier timing function.
 
 For example, assume we have an equation for a bouncing ball's height:
