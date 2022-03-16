@@ -1,81 +1,54 @@
 # easing-fit
 
-Fit any easing function with keyframes and cubic-bezier timing function.
+convert a function into keyframes, with output size optimized by fitting result in cubic-bezier timing function.
 
-For example, assume we have an equation for a bouncing ball's height:
+For example, say we have following equation for a bouncing ball's height:
 
-    Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / ( Math.pow(3 * t + 2, 5 * t) + 1))
+    f = (t) -> Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / ( Math.pow(3 * t + 2, 5 * t) + 1))
+
+We can convert it into a list of values with timing function defined in corresponding cubic beziers curves:
+
+    [
+        { percent:  0, value: 0.004, cubicBezier: [ 0.149,  0.2354, 0.2254, 0.883  ] },
+        { percent: 12, value: 0.368, cubicBezier: [ 0.3784, 0.1998, 0.5522, 0.9861 ] },
+        { percent: 26, value: 0.046, cubicBezier: [ 0.1838, 0.3635, 0.3735, 1      ] },
+        ...
+    ]
+
+The bezier curves in the output result are tweaked to minimize the total frames needed for re-creating effect of the input equation. This can then be converted into CSS keyframes for animation.
 
 
-instead of simply sampling it with fixed interval of t, easing-fit breaks it into pieces of cubic bezier spline:
+## Installation
 
-    @keyframes bouncing {
-      0% {
-        animation-timing-function: cubic-bezier(0,0.5,1,0.6);
-        transform: translate(0.4px);
-      }
-      11.5% {
-        animation-timing-function: cubic-bezier(0.7,0.2,0.8,0.7);
-        transform: translate(36.9px);
-      }
-      24.6% {
-        animation-timing-function: cubic-bezier(0.2,0.3,0.3,0.9);
-        transform: translate(0px);
-      }
-      32.3% {
-        animation-timing-function: cubic-bezier(0.5,0.2,0.7,0.6);
-        transform: translate(13.8px);
-      }
-      43.3% {
-        animation-timing-function: cubic-bezier(0.3,0.5,0.6,0.8);
-        transform: translate(0px);
-      }
-      49.6% {
-        animation-timing-function: cubic-bezier(0.4,0.1,0.7,0.6);
-        transform: translate(4px);
-      }
-      59.2% {
-        animation-timing-function: cubic-bezier(0.3,0.5,0.7,0.8);
-        transform: translate(0px);
-      }
-      64.6% {
-        animation-timing-function: cubic-bezier(0.3,0.2,0.7,0.7);
-        transform: translate(1.1px);
-      }
-      73.1% {
-        animation-timing-function: cubic-bezier(0.3,0.5,0.7,1);
-        transform: translate(0px);
-      }
-      100% {
-        transform: translate(0px);
-      }
-    }
+    npm install --save easing-fit
 
 
 ## Usage
 
-First, import easing-fit and use it to create a keyframes object for our customized easing function:
+Import easing-fit ( or, include `index.bundle.min.js` ):
 
     easingFit = require("easing-fit");
-    customFunc = function(t) {
-      return Math.sin(t * Math.PI * 2);
-    };
-    keyframes = easingFit.fit(customFunc, {});
 
-The keyframes object contains all information needed. Then, convert it to CSS keyframe string with this help function:
 
-    var result = easingFit.toKeyframes(keyframes, {
-      format: "css",
-      prop: function(keyframe,config, idx) { return {"transform": "translate(" + keyframe.value + ")"}; },
+fit a given function with `easingFit.fit`:
+
+    customfunc = (t) -> Math.sin(t * Math.PI * 2);
+    frames = easingFit.fit(customFunc, opts); /* opts explained below */
+
+
+convert the keyframes into CSS:
+
+    result = easingFit.toKeyframes(frames, {
+      prop: (kf, cfg, idx) -> {transform: "translate(#{kf.value})"}
       name: "sine",
-      config: {.../* custom defined config */ }
+      config: { /* ... custom defined config */ }
     });
     /* result is the result CSS content */
 
-Be sure to add your own prop function for converting value into CSS property. You can also check sample.ls for more detail.
+Check sample.ls for more detail.
 
 
-## Configuration
+## easingFit.fit Configuration
 
 To tweak easing-fit further more, you can pass configuration into easingFit.fit, in the second parameter.
 
@@ -89,3 +62,12 @@ To tweak easing-fit further more, you can pass configuration into easingFit.fit,
 ## LICENSE
 
 MIT
+
+
+# fitting function
+# Parameters:
+#   func: timing function func(t), t = 0 ~ 1
+#   options:
+#     precision: output value will be rounded to this precision
+#     sample-count: how many points to sample for each segment
+#     error-threshold: max error between a spline and target function

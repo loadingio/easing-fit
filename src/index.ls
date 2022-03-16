@@ -1,24 +1,16 @@
 require! <[fit-curve svg-path-properties]>
 
-round = (n, d = 5) ->
-  p = Math.pow(10, d)
-  ret = "#{Math.round(n * p ) / p}".split(".")
-  +(ret.0 + (if ret.1 => "." + ret.1.substring(0,d) else ""))
-  # or use this:  +(n).toFixed(d)
+fixed = (n, d = 5) -> +(n).toFixed d
+sample-func = (t) -> Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / ( Math.pow(3 * t + 2, 5 * t) + 1))
 
-sample-func = (t) -> 
-  Math.abs(Math.sin(Math.pow(3 * t + 1.77, 2)) / ( Math.pow(3 * t + 2, 5 * t) + 1))
-
-# fitting function
-# Parameters:
-#   func: timing function func(t), t = 0 ~ 1
-#   options:
-#     precision: output value will be rounded to this precision
-#     sample-count: how many points to sample for each segment
-#     error-threshold: max error between a spline and target function
-fit = (func, opt = {}) ->
+easingfit = (func, opt = {}) ->
   opt = {
-    seg-sample-count: 100, precision: 0.0001, sample-count: 5, error-threshold: 0.1, start: 0, end: 1,
+    seg-sample-count: 100
+    precision: 0.0001
+    sample-count: 5
+    error-threshold: 0.1
+    start: 0
+    end: 1
     seg-ptrs: []
   } <<< opt
   [ox, oy, dy, count, segments] = [opt.start, 0, 1, 0, []]
@@ -76,9 +68,9 @@ fit = (func, opt = {}) ->
       if isNaN(ncurve.1.1) => ncurve.1.1 = ncurve.1.0
       if isNaN(ncurve.2.1) => ncurve.2.1 = ncurve.2.0
       keyframes.push do
-        percent: round(x1 * 100)
+        percent: fixed(x1 * 100)
         value: y1
-        cubic-bezier: [ncurve.1.0, ncurve.1.1, ncurve.2.0, ncurve.2.1].map -> round(it)
+        cubic-bezier: [ncurve.1.0, ncurve.1.1, ncurve.2.0, ncurve.2.1].map -> fixed(it)
 
   keyframes.push do
     percent: opt.end * 100
@@ -96,7 +88,7 @@ fit = (func, opt = {}) ->
 #     output:  array of string.
 #   format: one of following: "css", "stylus"
 #   config: customized config for used in prop. defined by user.
-to-keyframes = (keyframes, opt = {}) ->
+_to-keyframes = (keyframes, opt = {}) ->
   opt = {} <<< {
     prop: (f, c)-> { content: "\"#{f.value}\"" }
     name: null
@@ -137,9 +129,9 @@ to-keyframes = (keyframes, opt = {}) ->
 #   prop: for customizing css properties to animate.
 #   format: one of following: "css", "stylus"
 #   config: customized config for used in prop. defined by user.
-fit-to-keyframes = (step, opt={}) ->
-  ret = fit step, opt
-  ret = to-keyframes ret, ({prop: (->{}), format: \css} <<< opt){name, prop, format, config}
+to-keyframes = (step, opt={}) ->
+  ret = easingfit step, opt
+  ret = _to-keyframes ret, ({prop: (->{}), format: \css} <<< opt){name, prop, format, config}
   return ret
 
 sample-svg = "M0,50c0,0,2,0.5,6.7,0c5.6-0.6,3.5-18.1,7.1-18.1s4.2,25.6,8.9,25.6s6.8-10.3,8.4-14c1.9-4.4,7.9-5.4,10.9,0.1C46.7,52.3,100,50,100,50"
@@ -156,7 +148,7 @@ search-svg-path = (p, x, len, err = 0.01, r=[0, 1], lv = 20) ->
 # d: <path d>
 from-svg = (d, opt = {}) ->
   step = step-from-svg d
-  fit step, opt
+  easingfit step, opt
 
 # if opt.presampling = true, enable presampling with opt.sample-count
 step-from-svg = (pathd, opt  = {}) ->
@@ -171,8 +163,11 @@ step-from-svg = (pathd, opt  = {}) ->
     if idx == pts.length - 1 => return pts[idx]
     return (pts[idx + 1] - pts[idx]) * (t -idx)
 
-module.exports = {
-  round,
-  sample-func, sample-svg, fit-to-keyframes
-  fit, from-svg, step-from-svg, to-keyframes
+easingfit <<< {
+  sample-func, sample-svg
+  to-keyframes, _to-keyframes
+  from-svg, step-from-svg
 }
+
+if module? => module.exports = easingfit
+else if window? => window.easing-fit = easingfit

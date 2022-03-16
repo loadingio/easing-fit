@@ -1,0 +1,27 @@
+{
+  "name": "fit-curve",
+  "version": "0.1.6",
+  "description": "JavaScript implementation of Philip J. Schneider's \"Algorithm for Automatically Fitting Digitized Curves\" from the book \"Graphics Gems\"",
+  "main": "lib/fit-curve.js",
+  "scripts": {
+    "test": "mocha",
+    "prepublish": "mkdir lib || script/build.sh"
+  },
+  "homepage": "https://github.com/soswow/fit-curve",
+  "bugs": {
+    "url": "https://github.com/soswow/fit-curve/issues",
+    "email": "soswow@gmail.com"
+  },
+  "author": "Philip J. Schneider, Volker Poplawski, Aleksandr Motsjonov",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-es2015-modules-umd": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015-loose": "^8.0.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "chai": "^3.5.0",
+    "closurecompiler": "^1.6.1",
+    "mocha": "^3.2.0"
+  }
+}

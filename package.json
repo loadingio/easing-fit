@@ -1,30 +1,46 @@
 {
   "author": "zbryikt",
-  "name": "easing-fit",
+  "name": "easingfit",
   "description": "Fit any easing function with keyframes and cubic-bezier timinf function",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "browser": "dist/index.bundle.min.js",
   "main": "dist/index.min.js",
-  "homepage": "https://github.com/loadingio/easing-fit",
+  "homepage": "https://github.com/loadingio/easingfit",
   "license": "MIT",
   "files": [
     "dist/**/*"
   ],
+  "scripts": {
+    "start": "npx server -r web -o true"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/loadingio/easing-fit"
+    "url": "https://github.com/loadingio/easingfit"
   },
   "engines": {
     "node": ">=0.12.6",
     "npm": ">=1.2.2"
   },
   "devDependencies": {
-    "livescript": ">=1.6.0",
+    "@loadingio/bootstrap.ext": "^0.0.6",
+    "@zbryikt/template": "^2.3.34",
+    "bootstrap": "^5.1.3",
     "browserify": "=16.2.3",
+    "fedep": "^1.1.7",
+    "livescript": ">=1.6.0",
     "uglify-js": "=3.13.1"
   },
   "dependencies": {
     "fit-curve": "=0.1.6",
     "svg-path-properties": "^0.4.7"
+  },
+  "frontendDependencies": {
+    "root": "web/static/assets/lib",
+    "modules": [
+      "fit-curve",
+      "svg-path-properties",
+      "@loadingio/bootstrap.ext",
+      "bootstrap"
+    ]
   }
 }
