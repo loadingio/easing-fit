@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.3
+
+ - bug fix: browserify with standalone name to correctly expose module
+
+
 ## v0.0.2
 
  - rename `easing-fit.js`, `easing-fit.min.js` to `index.js` and `index.min.js`

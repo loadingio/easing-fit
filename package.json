@@ -2,7 +2,7 @@
   "author": "zbryikt",
   "name": "easing-fit",
   "description": "Fit any easing function with keyframes and cubic-bezier timinf function",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "browser": "dist/index.bundle.min.js",
   "main": "dist/index.min.js",
   "homepage": "https://github.com/loadingio/easing-fit",
