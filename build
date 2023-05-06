@@ -4,7 +4,7 @@ mkdir -p dist
 echo "build src/index.ls -> dist/index.js ..."
 ./node_modules/.bin/lsc -cp --no-header src/index.ls > dist/index.js
 echo "bundling index.js ..."
-./node_modules/.bin/browserify dist/index.js > dist/index.bundle.js
+./node_modules/.bin/browserify -s easingFit dist/index.js > dist/index.bundle.js
 #./node_modules/.bin/browserify dist/index.js | \
 #  ./node_modules/.bin/babel --no-babelrc --presets=env > dist/index.bundle.js
 echo "minifying index.js ..."
